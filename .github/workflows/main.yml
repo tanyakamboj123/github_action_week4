@@ -8,18 +8,19 @@ on:
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          ref: main  # Ensure correct branch
+        
 
       - name: Commit and Push Changes
         run: |
           git config --global user.name "GitHub Action Bot"
           git config --global user.email "21f3000745@ds.study.iitm.ac.in"
-          echo "Daily update: $(date)" >> daily_update.txt
+          echo "Daily update: $(date)" 
           git add .
-          git diff --cached --quiet || (git commit -m "Automated daily commit: $(date)" && \
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tanyakamboj123/github_action_week4.git)
+          git commit -m "Update " || exit 0
+          git push 

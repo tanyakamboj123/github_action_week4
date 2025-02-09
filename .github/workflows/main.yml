@@ -2,7 +2,7 @@ name: Daily Commit
 
 on:
   schedule:
-    - cron: "30 2 * * *"  # Runs every day at 02:30 UTC (adjust time as needed)
+    - cron: "30 2 * * *"  # Runs every day at 02:30 UTC
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -12,12 +12,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          ref: main  # Ensure correct branch
 
-      - name: 21f3000745@ds.study.iitm.ac.in
+      - name: Commit and Push Changes
         run: |
-          echo "Daily update: $(date)" >> daily_update.txt
           git config --global user.name "GitHub Action Bot"
           git config --global user.email "21f3000745@ds.study.iitm.ac.in"
+          echo "Daily update: $(date)" >> daily_update.txt
           git add .
-          git commit -m "Automated daily commit: $(date)"
-          git push
+          git diff --cached --quiet || (git commit -m "Automated daily commit: $(date)" && \
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tanyakamboj123/github_action_week4.git)
